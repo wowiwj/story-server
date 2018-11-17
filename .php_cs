@@ -1,5 +1,5 @@
-
 <?php
+
 $excluded_folders = [
     'node_modules',
     'storage',
