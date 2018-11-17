@@ -7,7 +7,6 @@ $excluded_folders = [
 ];
 $finder = PhpCsFixer\Finder::create()
     ->exclude($excluded_folders)
-    ->notName('AcceptanceTester.php')
     ->notName('FunctionalTester.php')
     ->notName('UnitTester.php')
     ->in(__DIR__);
