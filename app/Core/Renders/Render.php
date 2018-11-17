@@ -45,15 +45,15 @@ class Render
 
     public function shouldReturn()
     {
-        if (!($this->request->wantsJson() || $this->request->ajax())) {
+        if (! ($this->request->wantsJson() || $this->request->ajax())) {
             return false;
         }
 
-        if (!$this->exception) {
+        if (! $this->exception) {
             return false;
         }
 
-        if (app()->environment() != 'production'
+        if ('production' != app()->environment()
             && $this->exception instanceof ErrorException
         ) {
             return false;

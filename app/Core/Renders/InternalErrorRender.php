@@ -13,7 +13,7 @@ class InternalErrorRender extends RenderAble
 
     public function getMessage()
     {
-        if (app()->environment() != 'production') {
+        if ('production' != app()->environment()) {
             return [];
         }
 

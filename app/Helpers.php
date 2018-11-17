@@ -4,8 +4,7 @@ use App\Core\Api\ApiResponse;
 use App\Exceptions\FrontEndException;
 use Symfony\Component\HttpFoundation\Response as HttpCode;
 
-if (!function_exists('api')) {
-
+if (! function_exists('api')) {
     /**
      * User: wangju
      * Date: 2018/11/17 10:37 PM.
@@ -18,8 +17,7 @@ if (!function_exists('api')) {
     }
 }
 
-if (!function_exists('fe_abort')) {
-
+if (! function_exists('fe_abort')) {
     /**
      * User: wangju
      * Date: 2018/11/17 10:23 PM.

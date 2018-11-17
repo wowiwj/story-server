@@ -9,7 +9,7 @@ class CommonRender extends RenderAble
     public function getCode()
     {
         $code = $this->exception->getCode();
-        if ($code == 0) {
+        if (0 == $code) {
             return HttpCode::HTTP_BAD_REQUEST;
         }
 
@@ -18,7 +18,7 @@ class CommonRender extends RenderAble
 
     public function getMessage()
     {
-        if ($this->exception->getCode() != HttpCode::HTTP_BAD_REQUEST) {
+        if (HttpCode::HTTP_BAD_REQUEST != $this->exception->getCode()) {
             return '系统异常';
         }
 
