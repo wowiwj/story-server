@@ -11,7 +11,6 @@ class InternalErrorRender extends RenderAble
         return HttpCode::HTTP_INTERNAL_SERVER_ERROR;
     }
 
-
     public function getMessage()
     {
         if (app()->environment() != 'production') {

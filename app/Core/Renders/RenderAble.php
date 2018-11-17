@@ -4,10 +4,8 @@ namespace App\Core\Renders;
 
 use Exception;
 
-
 abstract class RenderAble
 {
-
     protected $exception;
 
     private function __construct(Exception $exception)

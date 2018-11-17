@@ -4,13 +4,12 @@ namespace App\Core\Renders;
 
 use App\Exceptions\FrontEndException;
 use ErrorException;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Exception;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -30,12 +29,12 @@ class Render
         // 默认前端错误
         FrontEndException::class             => FrontEndDefaultRender::class,
         // 系统错误
-        ErrorException::class                => InternalErrorRender::class
+        ErrorException::class                => InternalErrorRender::class,
     ];
 
     public function __construct(Request $request, Exception $exception)
     {
-        $this->request   = $request;
+        $this->request = $request;
         $this->exception = $exception;
     }
 
@@ -63,29 +62,26 @@ class Render
         return true;
     }
 
-
     public function report()
     {
-
         foreach (array_keys($this->renders) as $render) {
             if ($this->exception instanceof $render) {
                 $renderClass = $this->renders[$render];
-                $render      = $renderClass::make($this->exception);
+                $render = $renderClass::make($this->exception);
+
                 return $this->response($render);
             }
         }
         $render = CommonRender::make($this->exception);
+
         return $this->response($render);
     }
 
     protected function response(RenderAble $render)
     {
-
         return api()->failed(
             $render->getMessage(),
             $render->getCode()
         );
     }
-
-
 }

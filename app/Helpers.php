@@ -8,7 +8,8 @@ if (!function_exists('api')) {
 
     /**
      * User: wangju
-     * Date: 2018/11/17 10:37 PM
+     * Date: 2018/11/17 10:37 PM.
+     *
      * @return ApiResponse
      */
     function api()
@@ -21,14 +22,15 @@ if (!function_exists('fe_abort')) {
 
     /**
      * User: wangju
-     * Date: 2018/11/17 10:23 PM
+     * Date: 2018/11/17 10:23 PM.
+     *
      * @param $message
      * @param int $code
+     *
      * @throws FrontEndException
      */
-    function fe_abort($message,$code = HttpCode::HTTP_BAD_REQUEST)
+    function fe_abort($message, $code = HttpCode::HTTP_BAD_REQUEST)
     {
         throw new FrontEndException($message, $code);
     }
-
 }

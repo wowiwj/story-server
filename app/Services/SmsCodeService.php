@@ -6,7 +6,6 @@ use App\Models\SmsLog;
 
 class SmsCodeService
 {
-
     protected $phone;
 
     public function __construct($phone)
@@ -19,29 +18,28 @@ class SmsCodeService
         $type = 'register';
         // send sms over 10 time will abort
         $todayCount = SmsLog::query()
-            ->where('phone',$this->phone)
-            ->where('created_at','>=',now()->startOfDay())
+            ->where('phone', $this->phone)
+            ->where('created_at', '>=', now()->startOfDay())
             ->count();
 
-        if ($todayCount >= 10){
+        if ($todayCount >= 10) {
             return false;
         }
 
         $latestSend = SmsLog::query()
-            ->where('phone',$this->phone)
+            ->where('phone', $this->phone)
             ->latest()
             ->first();
         dd($latestSend);
-
 
         // generate random sms code
         $code = $this->randomCode();
         $key = $this->cacheKey($type);
 
         SmsLog::query()->create([
-            'type' => $type,
+            'type'  => $type,
             'phone' => $this->phone,
-            'code' => $code
+            'code'  => $code,
         ]);
 
         return $code;
@@ -52,16 +50,16 @@ class SmsCodeService
         return random_int(1000, 9999);
     }
 
-    protected function cacheKey($from = null){
-        if (empty($from)){
+    protected function cacheKey($from = null)
+    {
+        if (empty($from)) {
             return $this->phone;
         }
+
         return snake_case($from).'_'.$this->phone;
     }
 
     public function getRegisterCode()
     {
-
     }
-
 }

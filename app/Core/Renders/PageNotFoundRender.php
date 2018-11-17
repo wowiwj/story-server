@@ -15,6 +15,4 @@ class PageNotFoundRender extends RenderAble
     {
         return HttpCode::HTTP_NOT_FOUND;
     }
-
-
 }
