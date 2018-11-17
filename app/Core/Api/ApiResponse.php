@@ -4,8 +4,8 @@ namespace App\Core\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Symfony\Component\HttpFoundation\Response as HttpCode;
 use Response;
+use Symfony\Component\HttpFoundation\Response as HttpCode;
 
 class ApiResponse
 {
@@ -24,17 +24,20 @@ class ApiResponse
 
     /**
      * @param $statusCode
+     *
      * @return $this
      */
     public function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;
+
         return $this;
     }
 
     /**
      * @param       $data
      * @param array $header
+     *
      * @return mixed
      */
     public function respond($data, $header = [])
@@ -42,6 +45,7 @@ class ApiResponse
         if ($this->debugEnabled()) {
             $data = array_merge($data, $this->getDebug());
         }
+
         return Response::json($data, $this->statusCode, $header);
     }
 
@@ -57,7 +61,8 @@ class ApiResponse
 
     /**
      * @param array $data
-     * @param null $code
+     * @param null  $code
+     *
      * @return mixed
      */
     public function status(array $data, $code = null)
@@ -66,16 +71,18 @@ class ApiResponse
             $this->setStatusCode($code);
         }
         $status = [
-            'code' => $this->statusCode
+            'code' => $this->statusCode,
         ];
-        $data   = array_merge($data, $status);
+        $data = array_merge($data, $status);
+
         return $this->respond($data);
     }
 
     /**
      * @param        $message
-     * @param int $code
+     * @param int    $code
      * @param string $status
+     *
      * @return mixed
      */
     public function failed($message, $code = HttpCode::HTTP_BAD_REQUEST)
@@ -85,6 +92,7 @@ class ApiResponse
 
     /**
      * @param $message
+     *
      * @return mixed
      */
     public function message($message, $code = null)
@@ -96,18 +104,20 @@ class ApiResponse
 
     /**
      * @param string $message
+     *
      * @return mixed
      */
-    public function internalError($message = "Internal Error!")
+    public function internalError($message = 'Internal Error!')
     {
         return $this->failed($message, HttpCode::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * @param string $message
+     *
      * @return mixed
      */
-    public function created($message = "created")
+    public function created($message = 'created')
     {
         return $this->setStatusCode(HttpCode::HTTP_CREATED)
             ->message($message);
@@ -115,6 +125,7 @@ class ApiResponse
 
     /**
      * @param $data
+     *
      * @return mixed
      */
     public function success($data)
@@ -129,6 +140,7 @@ class ApiResponse
 
     /**
      * @param string $message
+     *
      * @return mixed
      */
     public function notFond($message = 'Not Fond!')
@@ -136,17 +148,14 @@ class ApiResponse
         return $this->failed($message, HttpCode::HTTP_NOT_FOUND);
     }
 
-
     public function resource(JsonResource $resource)
     {
-
         $additional = [
-            'code' => $this->statusCode
+            'code' => $this->statusCode,
         ];
 
         if ($this->debugEnabled()) {
             $additional += $this->getDebug();
-
         }
         $resource->additional($additional);
 
@@ -155,15 +164,14 @@ class ApiResponse
 
     public function resourceAdditional(JsonResource $resource, $more = [])
     {
-
         if ($resource->resource instanceof LengthAwarePaginator) {
-            $total              = $resource->resource->total();
+            $total = $resource->resource->total();
             $resource->resource = collect($resource->resource->items());
-            $more['total']      = $total;
+            $more['total'] = $total;
         }
 
         $additional = [
-            'code' => $this->statusCode
+            'code' => $this->statusCode,
         ];
         $additional += $more;
 

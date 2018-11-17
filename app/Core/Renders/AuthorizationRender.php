@@ -4,7 +4,6 @@ namespace App\Core\Renders;
 
 use Symfony\Component\HttpFoundation\Response as HttpCode;
 
-
 class AuthorizationRender extends RenderAble
 {
     public function getCode()
@@ -16,6 +15,4 @@ class AuthorizationRender extends RenderAble
     {
         return $this->exception->getMessage();
     }
-
-
 }

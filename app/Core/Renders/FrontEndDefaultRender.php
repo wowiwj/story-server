@@ -12,9 +12,9 @@ class FrontEndDefaultRender extends RenderAble
         if ($code) {
             return $code;
         }
+
         return HttpCode::HTTP_BAD_REQUEST;
     }
-
 
     public function getMessage()
     {
