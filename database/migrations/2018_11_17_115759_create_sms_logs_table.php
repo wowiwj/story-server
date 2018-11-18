@@ -16,7 +16,7 @@ class CreateSmsLogsTable extends Migration
             $table->string('type');
             $table->string('phone');
             $table->string('code')->nullable();
-            $table->string('meta')->nullable();
+            $table->string('attempt_count')->default(0);
             $table->timestamps();
         });
     }

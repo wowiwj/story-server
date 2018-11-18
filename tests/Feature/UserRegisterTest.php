@@ -12,7 +12,7 @@ class UserRegisterTest extends TestCase
             'phone' => '13888888888',
         ]);
 
-        dd($result->json());
+        $this->assertTrue(true);
     }
 
     /**

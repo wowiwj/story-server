@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\SmsLog;
+use Carbon\Carbon;
 
 class SmsCodeService
 {
@@ -13,7 +14,24 @@ class SmsCodeService
         $this->phone = $phone;
     }
 
-    public function generateRegisterCode()
+    private function validLastSend()
+    {
+        $latestSend = SmsLog::query()
+            ->where('phone', $this->phone)
+            ->latest()
+            ->first();
+        if (empty($latestSend)) {
+            return true;
+        }
+        $latestSendAt = Carbon::parse($latestSend->created_at);
+        if ($latestSendAt->addSecond(60)->greaterThan(now())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function generateRegisterCode($code = null)
     {
         $type = 'register';
         // send sms over 10 time will abort
@@ -23,18 +41,17 @@ class SmsCodeService
             ->count();
 
         if ($todayCount >= 10) {
-            return false;
+            fe_abort('今日发送次数已超过限制');
         }
 
-        $latestSend = SmsLog::query()
-            ->where('phone', $this->phone)
-            ->latest()
-            ->first();
-        dd($latestSend);
+        if (! $this->validLastSend()) {
+            fe_abort('短信已发送，请在一分钟后重试');
+        }
 
         // generate random sms code
-        $code = $this->randomCode();
-        $key = $this->cacheKey($type);
+        if (null == $code) {
+            $code = $this->randomCode();
+        }
 
         SmsLog::query()->create([
             'type'  => $type,
@@ -45,12 +62,29 @@ class SmsCodeService
         return $code;
     }
 
-    protected function randomCode()
+    public function validate($code)
+    {
+        $lastLog = $this->getSendLastLog();
+
+        if (empty($lastLog)) {
+            return false;
+        }
+
+        if ($lastLog->attempt_count >= 3) {
+            return false;
+        }
+        $lastLog->increment('attempt_count');
+        $lastLog->save();
+
+        return $lastLog->code == $code;
+    }
+
+    private function randomCode()
     {
         return random_int(1000, 9999);
     }
 
-    protected function cacheKey($from = null)
+    private function cacheKey($from = null)
     {
         if (empty($from)) {
             return $this->phone;
@@ -59,7 +93,21 @@ class SmsCodeService
         return snake_case($from).'_'.$this->phone;
     }
 
-    public function getRegisterCode()
+    private function getSendLastLog()
     {
+        $latestSend = SmsLog::query()
+            ->where('phone', $this->phone)
+            ->latest()
+            ->first();
+        if (empty($latestSend)) {
+            return null;
+        }
+
+        $latestSendAt = Carbon::parse($latestSend->created_at);
+        if ($latestSendAt->addSecond(60 * 5)->lessThan(now())) {
+            return null;
+        }
+
+        return $latestSend;
     }
 }
