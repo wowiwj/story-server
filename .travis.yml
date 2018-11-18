@@ -10,4 +10,4 @@ before_script:
 
 script:
 - php artisan key:generate
-- vendor/bin/phpunit
+- vendor/bin/phpunit -c phpunit.xml --coverage-text
