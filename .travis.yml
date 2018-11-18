@@ -11,7 +11,7 @@ before_script:
 
 script:
 - php artisan key:generate
-- vendor/bin/phpunit
+- phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.xml
 
 cache:
     directories:
