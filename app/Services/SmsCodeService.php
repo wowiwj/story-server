@@ -93,6 +93,12 @@ class SmsCodeService
         return snake_case($from).'_'.$this->phone;
     }
 
+    /**
+     * User: wangju
+     * Date: 2018/11/18 11:22 AM.
+     *
+     * @return SmsLog|null
+     */
     private function getSendLastLog()
     {
         $latestSend = SmsLog::query()
