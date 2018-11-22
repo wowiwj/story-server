@@ -23,6 +23,6 @@ return [
             'access_key_id' => env("SMS_KEY_ID"),
             'access_key_secret' => env("SMS_KEY_SECRET"),
             'sign_name' => env("SMS_SIGN_NAME"),
-        ]
+        ],
     ],
 ];
