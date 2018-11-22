@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Overtrue\EasySms\EasySms;
 use Tests\TestCase;
 
 class UserRegisterTest extends TestCase
@@ -13,6 +14,27 @@ class UserRegisterTest extends TestCase
         ]);
 
         $this->assertTrue(true);
+    }
+
+    public function test_send_sms(){
+        if (app()->environment() != 'production'){
+            $this->assertTrue(true);
+            return;
+        }
+
+        try{
+            $result = easy_sms()->send(18888888888,[
+                'template' => 'SMS_63885240',
+                'data' => [
+                    'code' => 6379
+                ],
+            ]);
+        }catch (\Exception $e){
+            dd($e);
+        }
+
+        $this->assertTrue($result);
+
     }
 
     /**

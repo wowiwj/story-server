@@ -32,3 +32,15 @@ if (! function_exists('fe_abort')) {
         throw new FrontEndException($message, $code);
     }
 }
+
+if (! function_exists('easy_sms')) {
+    /**
+     * @return \Overtrue\EasySms\EasySms
+     *
+     * @author wangju 18-11-22 下午5:38
+     */
+    function easy_sms()
+    {
+        return app('easy_sms');
+    }
+}
