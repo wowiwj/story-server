@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Core\Utils\Sms;
 use App\Models\SmsLog;
 use Carbon\Carbon;
 
@@ -53,10 +54,14 @@ class SmsCodeService
             $code = $this->randomCode();
         }
 
+        // send sms
+        Sms::sendRegisterMessage($this->phone, $code);
+
         SmsLog::query()->create([
-            'type'  => $type,
-            'phone' => $this->phone,
-            'code'  => $code,
+            'type'         => $type,
+            'phone'        => $this->phone,
+            'code'         => $code,
+            'send_message' => Sms::getMessage(),
         ]);
 
         return $code;
@@ -82,15 +87,6 @@ class SmsCodeService
     private function randomCode()
     {
         return random_int(1000, 9999);
-    }
-
-    private function cacheKey($from = null)
-    {
-        if (empty($from)) {
-            return $this->phone;
-        }
-
-        return snake_case($from).'_'.$this->phone;
     }
 
     /**
